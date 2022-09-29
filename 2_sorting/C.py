@@ -1,7 +1,7 @@
 import sys
 
 N_LETTERS = 26
-SHIFT = 97
+SHIFT = ord('a')
 
 def counting_sort(curr_digit_arr, permutation, n):
     cnt = [0] * N_LETTERS

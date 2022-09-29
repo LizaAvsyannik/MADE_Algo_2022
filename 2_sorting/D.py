@@ -1,7 +1,7 @@
 import sys
 
 N_LETTERS = 26
-SHIFT = 97
+SHIFT = ord('a')
 
 def check(cnt_t, cnt_s):
     for i in range(N_LETTERS):
