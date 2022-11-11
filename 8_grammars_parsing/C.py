@@ -30,9 +30,24 @@ class Token:
 
 
 class Lexer:
+    RESERVED_NAMES = {'P': ('Podarok',  LexemType.FUNCTION),
+                      'D': ('Ded Moroz',  LexemType.CONSTANT),
+                      'M': ('Moroz', LexemType.CONSTANT),
+                      'S': ('Snegurochka', LexemType.CONSTANT)}
+
     def __init__(self, expression):
         self.__expression = expression
         self.__cur_idx = 0
+
+    def ___process_alpha_token(self, next_token):
+        if next_token in self.RESERVED_NAMES:
+            reserved_name, name_type = self.RESERVED_NAMES[next_token]
+            name_length = len(reserved_name)
+            if self.__expression[self.__cur_idx:self.__cur_idx + name_length - 1] == reserved_name[1:]:
+                token = Token(self.__expression[self.__cur_idx - 1:self.__cur_idx + name_length - 1], name_type)
+                self.__cur_idx += (name_length - 1)
+                return token
+        return Token(next_token, LexemType.OTHER)
 
     def __next__(self):
         try:
@@ -59,34 +74,8 @@ class Lexer:
                     number = number + next_token
                     self.__cur_idx += 1
                 return Token(int(number), LexemType.NUMBER)
-            elif next_token == 'P':
-                if self.__expression[self.__cur_idx:self.__cur_idx + 6] == 'odarok':
-                    token = Token(self.__expression[self.__cur_idx - 1:self.__cur_idx + 6], LexemType.FUNCTION)
-                    self.__cur_idx += 6
-                    return token
-                else:
-                    return Token(next_token, LexemType.OTHER)
-            elif next_token == 'D':
-                if self.__expression[self.__cur_idx:self.__cur_idx + 8] == 'ed Moroz':
-                    token = Token(self.__expression[self.__cur_idx - 1:self.__cur_idx + 8], LexemType.CONSTANT)
-                    self.__cur_idx += 8
-                    return token
-                else:
-                    return Token(next_token, LexemType.OTHER)
-            elif next_token == 'M':
-                if self.__expression[self.__cur_idx:self.__cur_idx + 4] == 'oroz':
-                    token = Token(self.__expression[self.__cur_idx - 1:self.__cur_idx + 4], LexemType.CONSTANT)
-                    self.__cur_idx += 4
-                    return token
-                else:
-                    return Token(next_token, LexemType.OTHER)
-            elif next_token == 'S':
-                if self.__expression[self.__cur_idx:self.__cur_idx + 10] == 'negurochka':
-                    token = Token(self.__expression[self.__cur_idx - 1:self.__cur_idx + 10], LexemType.CONSTANT)
-                    self.__cur_idx += 10
-                    return token
-                else:
-                    return Token(next_token, LexemType.OTHER)
+            elif next_token.isalpha():
+                return self.___process_alpha_token(next_token)
             else:
                 return Token(next_token, LexemType.OTHER)
         except IndexError:
