@@ -44,13 +44,10 @@ class Tree:
             node.left = self.__delete(node.left, key)
         else:
             if not node.left:
-                node = node.right
-                return node
-            elif not node.right:
-                node = node.left
-                return node
-            node.key = self.__max(node.left).key
-            node.left = self.__delete(node.left, node.key)
+                return node.right
+            else:
+                node.key = self.__max(node.left).key
+                node.left = self.__delete(node.left, node.key)
         return self.__balance(node)
 
     def __prev(self, node, key):
